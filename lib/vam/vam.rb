@@ -68,8 +68,9 @@ module Vam
     def copy(dest)
       if Dir.exist? dest
         FileUtils.rm_r dest
-        FileUtils.mkdir_p dest
       end
+
+      FileUtils.mkdir_p dest
 
       FileUtils.cp_r "#{@vroot}/.", dest
     end
