@@ -1,7 +1,7 @@
 require 'vam/constants'
 require 'vam/dsl'
 require 'vam/repo'
-require 'vam/server'
+
 
 module Vam
   class CLI

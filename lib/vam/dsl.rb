@@ -1,7 +1,5 @@
 require 'vam/vam'
 
-require 'jimson'
-
 
 module Vam
   class Dsl
