@@ -1,5 +1,7 @@
 require 'open-uri'
 
+require 'vam/errors'
+
 module Vam
 
   class Repo
@@ -13,11 +15,16 @@ module Vam
 
 
     def latest_version(name)
+      raise MissingComponentError, "Missing component with name [ #{name} ]" unless @vendors.has_key? name
       @vendors[name].keys.sort[0]
     end
 
 
     def files(name, version)
+      unless @vendors.has_key? name and @vendors[name].has_key? version
+        raise MissingComponentError, "Missing component with name [ #{name} ] and version [ #{version} ]"
+      end
+
       @vendors[name][version].collect do |e|
         {
             dir: File.dirname(e),
@@ -52,7 +59,7 @@ module Vam
 
         Dir.glob(File.join s, '*').each do |v|
           version = File.basename(v)
-          files = Dir.glob(File.join v, '/**/*').collect { |e| e.slice!("#{v}/"); e }
+          files = Dir.glob(File.join v, '/**/*').reject{ |e| File.directory? e }.collect { |e| e.slice!("#{v}/"); e }
           repo.add name, version, files
         end
       end

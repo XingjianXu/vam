@@ -1,8 +1,10 @@
 require 'fileutils'
 require 'colorize'
-require 'vam/constants'
 require 'open-uri'
 require 'pp'
+
+require 'vam/constants'
+require 'vam/errors'
 
 module Vam
 
@@ -33,12 +35,13 @@ module Vam
 
     def install(dest)
       puts "===Install #{@name}===".colorize(:blue)
-      unless cached?
-        download
-      else
+      if cached?
         puts 'Using cache...'
+      else
+        download
       end
       copy File.join(dest, @name)
+
     end
 
 
@@ -52,7 +55,7 @@ module Vam
 
       @files.each do |file|
         dir = File.join @vroot_tmp, file[:dir]
-        FileUtils.mkdir_p dir
+        FileUtils.mkdir_p dir unless Dir.exist? dir
         df = File.join dir, file[:filename]
 
         open File.join(df), 'wb' do |s|

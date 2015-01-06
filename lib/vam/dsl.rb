@@ -33,8 +33,13 @@ module Vam
         options[:version] = args.first
       end
 
-      vam = Vam.new name, self, options
-      @vams << vam
+      begin
+        vam = Vam.new name, self, options
+        @vams << vam
+      rescue MissingComponentError => e
+        puts e.message.colorize(:red)
+      end
+
     end
 
 
